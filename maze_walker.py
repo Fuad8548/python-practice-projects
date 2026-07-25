@@ -8,7 +8,7 @@ maze = [
     ["W", "W", "W", "W", "W"]
 ]
 
-player_pos = (4, 4)
+player_pos = (0, 0)
 move_history = []
 delta_lookup = {
     "up": (-1, 0), 
@@ -42,13 +42,12 @@ while True:
             print("No moves to undo yet!")
             continue  
 
-        last_move = move_history.pop()
-        reverse_direction = opposite[last_move] # returns value of the 'opposite' dictionary
-        reverse_delta = delta_lookup[reverse_direction]  
         # build reverse_delta dictionary, then immediately grab the value 
         # at key exactly same as the value of reverse_direction
-
-        print(reverse_delta)
+        # returns value of the 'opposite' dictionary
+        last_move = move_history.pop()
+        reverse_direction = opposite[last_move] 
+        reverse_delta = delta_lookup[reverse_direction]  
 
         # player_pos[0] & player_pos[1] are the current row and column respectively 
         # reverse_delta[0] & reverse_delta[1] are the row and column changes respectively
@@ -69,18 +68,17 @@ while True:
     new_row = player_pos[0] + delta[0]
     new_col = player_pos[1] + delta[1]
 
-    # player_pos = (new_row, new_col)
-    # move_history.append(direction)
-    # print("Moved", direction, ": at", player_pos)
-
     # checking either the player crosses the border or is hindered by the wall
     if new_row < 0 or new_row >= len(maze) or new_col < 0 or new_col >= len(maze[0]):
         print("Nay! Out of the border!")
         continue  
-    elif maze[new_row][new_col] == "W":
+
+    # check if there is wall 
+    if maze[new_row][new_col] == "W":
         print("There is wall, try a different direction.")
         continue
 
+    # updating player position and move history
     player_pos = (new_row, new_col)
     move_history.append(direction)
     print("Moved", direction, ": at", player_pos)
@@ -88,12 +86,10 @@ while True:
     # if player reach the destination
     if maze[new_row][new_col] == "G":
         print("Voila! you reached the goal!")
+        print("Full move history:", move_history)
         break 
     
-print("Full move history:", move_history)
 
-
-    
 # In Python, maze[-1] doesn't error out — it wraps around and grabs the last row instead.
 # (index -1 means "last item" in Python indexing). 
 # So maze[-1][new_col] would actually check the bottom row of our maze, not "outside the grid
