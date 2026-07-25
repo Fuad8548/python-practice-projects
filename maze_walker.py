@@ -30,11 +30,20 @@ for i, row in enumerate(maze):
     print()
         
 while True:
-    direction = input("Which way: (up/down/left/right/undo/quit):")
+    direction = input("Which way: (up/down/left/right/undo/quit/restart):")
 
+    # If the player want to exit the game
     if direction == "quit":
         print("Thanks for playing!")
         break
+
+    # If the player want a fresh start
+    if direction == "restart":
+        move_history.clear()
+        player_pos = (0, 0)
+        print("Let's get started again!")
+        print(maze)
+        continue
 
     # if player undo current position
     if direction == "undo":
