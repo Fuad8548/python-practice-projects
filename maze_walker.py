@@ -1,14 +1,14 @@
 # ..................... this is a project of practising python list, tuple methods and loops ......................
 
 maze = [
-    ["W", "W", "W", "W", "W"],
+    [".", "W", "W", "W", "W"],
     [".", ".", ".", ".", "W"],
     ["W", ".", "W", ".", "W"],
     ["W", ".", ".", "G", "W"],
     ["W", "W", "W", "W", "W"]
 ]
 
-player_pos = (0, 0)
+player_pos = (4, 4)
 move_history = []
 delta_lookup = {
     "up": (-1, 0), 
@@ -69,17 +69,23 @@ while True:
     new_row = player_pos[0] + delta[0]
     new_col = player_pos[1] + delta[1]
 
-    if new_row < 0 or new_col >= len(row):
+    # player_pos = (new_row, new_col)
+    # move_history.append(direction)
+    # print("Moved", direction, ": at", player_pos)
+
+    # checking either the player crosses the border or is hindered by the wall
+    if new_row < 0 or new_row >= len(maze) or new_col < 0 or new_col >= len(maze[0]):
         print("Nay! Out of the border!")
         continue  
     elif maze[new_row][new_col] == "W":
-        print("There is wall, try a different direction")
+        print("There is wall, try a different direction.")
         continue
 
     player_pos = (new_row, new_col)
     move_history.append(direction)
-    print("Player moved", direction, ": at", player_pos)
-    
+    print("Moved", direction, ": at", player_pos)
+
+    # if player reach the destination
     if maze[new_row][new_col] == "G":
         print("Voila! you reached the goal!")
         break 
