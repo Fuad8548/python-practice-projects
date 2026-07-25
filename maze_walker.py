@@ -44,12 +44,7 @@ while True:
 
         last_move = move_history.pop()
         reverse_direction = opposite[last_move] # returns value of the 'opposite' dictionary
-        reverse_delta = {
-            "up": (-1, 0), 
-            "down": (1, 0),
-            "left": (0, -1), 
-            "right": (0, 1)
-        }[reverse_direction]  
+        reverse_delta = delta_lookup[reverse_direction]  
         # build reverse_delta dictionary, then immediately grab the value 
         # at key exactly same as the value of reverse_direction
 
@@ -61,7 +56,7 @@ while True:
         print("Undid", last_move, "- now back at", player_pos)
         continue
 
-    # player move entry
+    # player movement entry
     if direction not in delta_lookup:
         print("Not a valid direction! Try again")
         continue
