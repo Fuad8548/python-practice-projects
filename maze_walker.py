@@ -16,19 +16,19 @@ for i, row in enumerate(maze):
     print()
         
 while True:
-    direction = input("Which way: (Up/ Down/ Left/ Right/ Quit):")
+    direction = input("Which way: (up/ down/ left/ right/ quit):")
 
-    if direction == "Quit":
+    if direction == "quit":
         print("Thanks for playing!")
         break
 
-    if direction == "Up":
+    if direction == "up":
         delta = (-1, 0)
-    elif direction == "Down":
+    elif direction == "down":
         delta = (1, 0)
-    elif direction == "Left":
+    elif direction == "left":
         delta = (0, -1)
-    elif direction == "Right":
+    elif direction == "right":
         delta = (0, 1)         
     else:
         print("Not a valid direction! Try again")
