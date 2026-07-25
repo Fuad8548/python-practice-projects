@@ -1,3 +1,5 @@
+# ..................... this is a project of practising python list, tuple methods and loops ......................
+
 maze = [
     ["W", "W", "W", "W", "W"],
     [".", ".", ".", ".", "W"],
@@ -8,6 +10,12 @@ maze = [
 
 player_pos = (0, 0)
 move_history = []
+opposite = {
+    "up": "down",
+    "down": "up",
+    "left": "right",
+    "right": "left"
+}
 
 for i, row in enumerate(maze):
     print(f"Row: {i}", end = " ")
@@ -16,7 +24,7 @@ for i, row in enumerate(maze):
     print()
         
 while True:
-    direction = input("Which way: (up/ down/ left/ right/ quit):")
+    direction = input("Which way: (up/down/left/right/undo/quit):")
 
     if direction == "quit":
         print("Thanks for playing!")
@@ -29,11 +37,16 @@ while True:
     elif direction == "left":
         delta = (0, -1)
     elif direction == "right":
-        delta = (0, 1)         
+        delta = (0, 1) 
+    elif direction == "undo":
+        if not move_history:
+            print("No moves to undo yet!")
+            continue        
     else:
         print("Not a valid direction! Try again")
         continue
 
+    # determining player positions
     new_row = player_pos[0] + delta[0]
     new_col = player_pos[1] + delta[1]
 
@@ -51,11 +64,25 @@ while True:
     if maze[new_row][new_col] == "G":
         print("Voila! you reached the goal!")
         break 
+
+    last_move = move_history.pop()
+    reverse_direction = opposite[last_move] # returns value of the 'opposite' dictionary
+    reverse_delta = {
+        "up": (-1, 0), 
+        "down": (1, 0),
+        "left": (0, -1), 
+        "right": (0, 1)
+    }[reverse_direction]
+    print(reverse_delta)
+
+    player_pos = (player_pos[0] + reverse_delta[0], player_pos[1] + reverse_delta[1])
+    print("Undid", last_move, "- now back at", player_pos)
+    continue
     
 print("Full move history:", move_history)
+
+
     
-
-
 
 
 
