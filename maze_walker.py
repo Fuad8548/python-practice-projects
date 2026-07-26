@@ -65,24 +65,28 @@ while True:
 
         undo_move_counter = int(count_undo_move)
 
-        if undo_move_counter <= 0 or undo_move_counter > len(move_history):
-            print("No moves remaining to undo.")
+        if undo_move_counter > len(move_history):
+            print("Not enough moves to undo.")
             continue
 
-        for _ in range(undo_move_counter):
+        # updating player position after undoing move ----------------------
+        # Grab the moves being undone BEFORE deleting anything
+        moves_to_undo = move_history[-undo_move_counter:]
+        # Delete them from history in one shot
+        del move_history[-undo_move_counter:]
+
+        # reversed() flips the order of moves_to_undo, so we process the most recently 
+        # made move first — because undoing must happen in reverse chronological order till the last move remaining
+        for move in reversed(moves_to_undo):
             # build reverse_delta dictionary, then immediately grab the value 
             # at key exactly same as the value of reverse_direction
             # returns value of the 'opposite' dictionary
-            last_move = move_history.pop()
-            reverse_direction = opposite[last_move] 
+            reverse_direction = opposite[move] 
             reverse_delta = delta_lookup[reverse_direction] 
-            print(reverse_delta)
-
             # player_pos[0] & player_pos[1] are the current row and column respectively 
             # reverse_delta[0] & reverse_delta[1] are the row and column changes respectively
             player_pos = (player_pos[0] + reverse_delta[0], player_pos[1] + reverse_delta[1])
-            
-           
+
         print(f"Undid last {undo_move_counter} move(s); {len(move_history)} move(s) remaining. Now back at {player_pos}")
         continue
 
