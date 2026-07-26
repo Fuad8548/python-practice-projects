@@ -108,7 +108,7 @@ while True:
         print("Nay! Out of the border!")
         continue  
 
-    # check if there is wall 
+    # check if there is wall ------------------
     if maze[new_row][new_col] == "W":
         print("There is wall, try a different direction.")
         continue
