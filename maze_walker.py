@@ -30,7 +30,7 @@ for i, row in enumerate(maze):
     print()
         
 while True:
-    direction = input("Which way: (up/down/left/right/undo/quit/restart):")
+    direction = input("Which way: (up/down/left/right/undo/quit/restart/history/trim <n>):")
 
     # If the player want to exit the game
     if direction == "quit":
@@ -43,6 +43,36 @@ while True:
         player_pos = (0, 0)
         print("Let's get started again!")
         print(maze)
+        continue
+
+    # View move history with step numbers -------------
+    if direction == "history":
+        if not move_history:
+            print("No moves yet.")
+            continue
+
+        for step_num, move in enumerate(move_history):
+            print(f"Step {step_num}: {move}")
+        continue
+
+    # Trim the oldest N moves -----------------
+    if direction.startswith("trim"):
+        count_trim_move = direction.replace("trim", "").strip()
+
+        if not count_trim_move.isdigit():
+            print("Usage: trim <number>, e.g., 'trim 2'")
+            continue 
+
+        trim_move_counter = int(count_trim_move)
+
+        if trim_move_counter <= 0 or trim_move_counter > len(move_history):
+            print("Not enough moves to trim that many.")
+            continue
+
+        for _ in range(trim_move_counter):
+            removed_moves = move_history.pop()
+
+        print(f"Trimmed the oldest {trim_move_counter} move(s); {len(move_history)} move(s) remaining. Currently at {player_pos}")
         continue
 
     # if player undo current position
