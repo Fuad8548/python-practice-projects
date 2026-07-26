@@ -30,7 +30,7 @@ for i, row in enumerate(maze):
     print()
         
 while True:
-    direction = input("Which way: (up/down/left/right/undo/quit/restart/history/trim <n>):")
+    direction = input("Which way: (up/down/left/right/undo <n>/quit/restart/history):")
 
     # If the player want to exit the game
     if direction == "quit":
@@ -55,43 +55,35 @@ while True:
             print(f"Step {step_num}: {move}")
         continue
 
-    # Trim the oldest N moves -----------------
-    if direction.startswith("trim"):
-        count_trim_move = direction.replace("trim", "").strip()
+    # if player undo one or more moves ---------------
+    if direction.startswith("undo"):
+        count_undo_move = direction.replace("undo", "").strip()
 
-        if not count_trim_move.isdigit():
-            print("Usage: trim <number>, e.g., 'trim 2'")
+        if not count_undo_move.isdigit():
+            print("Usage: undo <number>, e.g., 'undo 2'")
             continue 
 
-        trim_move_counter = int(count_trim_move)
+        undo_move_counter = int(count_undo_move)
 
-        if trim_move_counter <= 0 or trim_move_counter > len(move_history):
-            print("Not enough moves to trim that many.")
+        if undo_move_counter <= 0 or undo_move_counter > len(move_history):
+            print("No moves remaining to undo.")
             continue
 
-        for _ in range(trim_move_counter):
-            removed_moves = move_history.pop()
+        for _ in range(undo_move_counter):
+            # build reverse_delta dictionary, then immediately grab the value 
+            # at key exactly same as the value of reverse_direction
+            # returns value of the 'opposite' dictionary
+            last_move = move_history.pop()
+            reverse_direction = opposite[last_move] 
+            reverse_delta = delta_lookup[reverse_direction] 
+            print(reverse_delta)
 
-        print(f"Trimmed the oldest {trim_move_counter} move(s); {len(move_history)} move(s) remaining. Currently at {player_pos}")
-        continue
-
-    # if player undo current position
-    if direction == "undo":
-        if not move_history:
-            print("No moves to undo yet!")
-            continue  
-
-        # build reverse_delta dictionary, then immediately grab the value 
-        # at key exactly same as the value of reverse_direction
-        # returns value of the 'opposite' dictionary
-        last_move = move_history.pop()
-        reverse_direction = opposite[last_move] 
-        reverse_delta = delta_lookup[reverse_direction]  
-
-        # player_pos[0] & player_pos[1] are the current row and column respectively 
-        # reverse_delta[0] & reverse_delta[1] are the row and column changes respectively
-        player_pos = (player_pos[0] + reverse_delta[0], player_pos[1] + reverse_delta[1])
-        print("Undid", last_move, "- now back at", player_pos)
+            # player_pos[0] & player_pos[1] are the current row and column respectively 
+            # reverse_delta[0] & reverse_delta[1] are the row and column changes respectively
+            player_pos = (player_pos[0] + reverse_delta[0], player_pos[1] + reverse_delta[1])
+            
+           
+        print(f"Undid last {undo_move_counter} move(s); {len(move_history)} move(s) remaining. Now back at {player_pos}")
         continue
 
     # player movement entry
@@ -103,7 +95,7 @@ while True:
     # at key exactly same as the value of player input direction
     delta = delta_lookup[direction]
 
-    # determining player positions
+    # determining player positions ----------------
     new_row = player_pos[0] + delta[0]
     new_col = player_pos[1] + delta[1]
 
@@ -125,7 +117,7 @@ while True:
     # if player reach the destination
     if maze[new_row][new_col] == "G":
         print("Voila! you reached the goal!")
-        print("Full move history:", move_history)
+        move_history.clear()
         break 
     
 
