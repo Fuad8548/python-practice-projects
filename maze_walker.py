@@ -12,6 +12,8 @@ maze = [
 
 player_pos = (2, 1)
 move_history = []
+player_pos_history = []
+
 delta_lookup = {
     "up": (-1, 0), 
     "down": (1, 0),
@@ -24,12 +26,14 @@ opposite_dir = {
     "left": "right",
     "right": "left"
 }
+
 treasure_lookup = {
     # dictionary keys must be immutable, that's why tuple
     (3, 1): ("Ruby", 20), 
     (5, 3): ("Gold Coin", 50)
 }
 treasures_collected = []
+
 
 for i, row in enumerate(maze):
     print(f"Row: {i}", end = " ")
@@ -38,7 +42,7 @@ for i, row in enumerate(maze):
     print()
         
 while True:
-    direction = input("Which way: (up/down/left/right/undo <n>/quit/restart/history/treasures):")
+    direction = input("Which way: (up/down/left/right/undo <n>/quit/restart/history/report):")
 
     # If the player want to exit the game
     if direction == "quit":
@@ -48,6 +52,7 @@ while True:
     # If the player want a fresh start
     if direction == "restart":
         move_history.clear()
+        player_pos_history.clear()
         player_pos = (0, 0)
         print("Let's get started again!")
         print(maze)
@@ -98,6 +103,31 @@ while True:
         print(f"Undid last {undo_move_counter} move(s); {len(move_history)} move(s) remaining. Now back at {player_pos}")
         continue
 
+
+    # final report ===============================
+    # filter: count how many times each direction was used 
+    if direction == "report":
+        move_counts = {}
+        for dir_name in delta_lookup:
+            move_counts[dir_name] = len(list(filter(lambda m, d = dir_name: m == d, move_history)))
+
+        print("move counts ============") 
+        for dir_name, count in move_counts.items():
+            print(f"{dir_name.capitalize()}: {count}")                       
+        
+        first_move, *rest = move_history
+        print(f"\n You started by moving {first_move}, followed by {len(rest)} more move(s)")
+
+        # .zip(): pair each move with the position it led to ==============
+        print("\nStep by step replay") 
+        for step_num, (move, pos) in enumerate(zip(move_history, player_pos_history)):
+            print(f"Step {step_num}: moved {move} => landed at {pos}")
+
+        continue
+
+
+
+
     # player movement entry
     if direction not in delta_lookup:
         print("Not a valid direction! Try again")
@@ -130,16 +160,19 @@ while True:
         print(f"You found a {treasure[0]} worth {treasure[1]} points!")
 
 
+
     # updating player position and move history
     player_pos = (new_row, new_col)
     move_history.append(direction)
+    player_pos_history.append(player_pos)
     print("Moved", direction, ": at", player_pos)
-        
+
+
+
 
     # if player reach the destination
     if maze[new_row][new_col] == "G":
         print("Voila! you reached the goal!")
-        move_history.clear()
 
         # calculate total collected treasure points ======================= 
         # sort treasure points from highest to lowest; 
@@ -154,6 +187,22 @@ while True:
         # map function here pulls the values of treasures_collected(points) and then sums up 
         total_score = sum(map(lambda t: t[1], treasures_collected))
         print(f"Total score: {total_score}")
+
+       
+        
+        
+        move_history.clear()
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         break 
     
