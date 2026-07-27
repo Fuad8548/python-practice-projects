@@ -1,4 +1,11 @@
 # this is a project of practising python lists, tuples, loops & dictionaries  ......................
+"""
+MAZE WALKER
+A single project to practice python lists, tuples and 
+their common methods, dictionaries and loops:
+append, extend, insert, remove, pop, clear, sort/sorted, reverse, 
+.index(); for, while, break, continue, range, enumerate, zip, filter, map, sum, lambda
+"""
 
 maze = [
     [".", "W", "W", "W", "W"],
@@ -10,7 +17,7 @@ maze = [
     ["W", "W", "W", "W", "G"]
 ]
 
-player_pos = (2, 1)
+player_pos = (0, 0)
 move_history = []
 player_pos_history = []
 
