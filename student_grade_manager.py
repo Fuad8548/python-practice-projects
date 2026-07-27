@@ -67,7 +67,9 @@ def merge_students(other_dict):
 
 # 8. .pop() -------------------------------------
 def remove_student(name):
-    removed = students.pop(name, None)
+    # python dictionary .pop() method (not in list; TypeError!) takes None as fallback default value. 
+    # If a specified key is missing, python will print None instead of throwing KeyError.
+    removed = students.pop(name, None) 
     if removed is None:
         print(f"{name} not found, nothing removed.")
     else:

@@ -1,14 +1,16 @@
-# ..................... this is a project of practising python list, tuple methods and loops ......................
+# this is a project of practising python lists, tuples, loops & dictionaries  ......................
 
 maze = [
     [".", "W", "W", "W", "W"],
-    [".", ".", ".", ".", "W"],
-    ["W", ".", "W", ".", "W"],
-    ["W", ".", ".", "G", "W"],
-    ["W", "W", "W", "W", "W"]
+    [".", ".", "W", "W", "W"],
+    ["W", ".", ".", "W", "W"],
+    ["W", "T", "W", "W", "W"],
+    ["W", ".", ".", ".", "W"],
+    ["W", "W", "W", "T", "."],
+    ["W", "W", "W", "W", "G"]
 ]
 
-player_pos = (0, 0)
+player_pos = (2, 1)
 move_history = []
 delta_lookup = {
     "up": (-1, 0), 
@@ -16,12 +18,18 @@ delta_lookup = {
     "left": (0, -1), 
     "right": (0, 1)
 }
-opposite = {
+opposite_dir = {
     "up": "down",
     "down": "up",
     "left": "right",
     "right": "left"
 }
+treasure_lookup = {
+    # dictionary keys must be immutable, that's why tuple
+    (3, 1): ("Ruby", 20), 
+    (5, 3): ("Gold Coin", 50)
+}
+treasures_collected = []
 
 for i, row in enumerate(maze):
     print(f"Row: {i}", end = " ")
@@ -30,7 +38,7 @@ for i, row in enumerate(maze):
     print()
         
 while True:
-    direction = input("Which way: (up/down/left/right/undo <n>/quit/restart/history):")
+    direction = input("Which way: (up/down/left/right/undo <n>/quit/restart/history/treasures):")
 
     # If the player want to exit the game
     if direction == "quit":
@@ -81,7 +89,7 @@ while True:
             # build reverse_delta dictionary, then immediately grab the value 
             # at key exactly same as the value of reverse_direction
             # returns value of the 'opposite' dictionary
-            reverse_direction = opposite[move] 
+            reverse_direction = opposite_dir[move] 
             reverse_delta = delta_lookup[reverse_direction] 
             # player_pos[0] & player_pos[1] are the current row and column respectively 
             # reverse_delta[0] & reverse_delta[1] are the row and column changes respectively
@@ -113,15 +121,40 @@ while True:
         print("There is wall, try a different direction.")
         continue
 
+
+    # Treasure lookup and collection ---------------------------
+    if maze[new_row][new_col] == "T":
+        treasure = treasure_lookup[(new_row, new_col)]
+        treasures_collected.append(treasure)
+        maze[new_row][new_col] = "."
+        print(f"You found a {treasure[0]} worth {treasure[1]} points!")
+
+
     # updating player position and move history
     player_pos = (new_row, new_col)
     move_history.append(direction)
     print("Moved", direction, ": at", player_pos)
+        
 
     # if player reach the destination
     if maze[new_row][new_col] == "G":
         print("Voila! you reached the goal!")
         move_history.clear()
+
+        # calculate total collected treasure points ======================= 
+        # sort treasure points from highest to lowest; 
+        # .sorted() used instead of .sort() to get an instance of treasure_collected, keeping original list untouched
+        # lambda function unanimously called and returned automatically in one line
+        sorted_treasures = sorted(treasures_collected, key = lambda t: t[1], reverse = True)
+        print(sorted_treasures)
+
+        for name, value in sorted_treasures:
+            print(f"{name}: {value} points")
+
+        # map function here pulls the values of treasures_collected(points) and then sums up 
+        total_score = sum(map(lambda t: t[1], treasures_collected))
+        print(f"Total score: {total_score}")
+
         break 
     
 
