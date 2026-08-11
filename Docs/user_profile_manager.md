@@ -25,3 +25,4 @@ Normally you'd write self.name = data["name"], self.email = data["email"], one l
 - ## Why not callable(...)?
     - ```dir(user)``` also lists methods, not just data. A method (like __init__) is itself a value we can fetch with ```getattr()``` — and it's a function object, not data we want printed as a "field." Since we only want data fields like name and country, not the object's behavior, so the filter says: "show me attributes that (1) aren't Python's internal dunders, and (2) aren't functions — just plain stored data."
 
+To sum up, dynamic attributes let you work with attribute names that only exist as data (strings) at runtime, not as literal names you typed into your code.
